@@ -161,3 +161,5 @@ cython_debug/
 
 # Airflow
 *.db
+*.pid
+*.txt
