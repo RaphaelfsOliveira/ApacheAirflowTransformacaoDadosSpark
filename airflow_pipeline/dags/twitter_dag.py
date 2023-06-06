@@ -17,7 +17,7 @@ with DAG(dag_id = "TwitterDAG", start_date=days_ago(6), schedule_interval="@dail
     query = "datascience"
 
     twitter_operator = TwitterOperator(
-        file_path=join("datalake/twitter_spark/extract_date={{ data_interval_start.strftime('%Y-%m-%d') }}", "{{ ts }}.json"),
+        file_path=join("datalake/twitter_spark/extract_date={{ data_interval_start.strftime('%Y-%m-%d') }}", "{{ data_interval_start.strftime('%Y-%m-%d') }}.json"),
         start_time="{{ data_interval_start.strftime('%Y-%m-%dT%H:%M:%S.00Z') }}",
         end_time="{{ data_interval_end.strftime('%Y-%m-%dT%H:%M:%S.00Z') }}",
         query=query,
