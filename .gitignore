@@ -163,3 +163,4 @@ cython_debug/
 *.db
 *.pid
 *.txt
+*.json
