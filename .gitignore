@@ -164,3 +164,4 @@ cython_debug/
 *.pid
 *.txt
 *.json
+airflow_pipeline/logs/scheduler/latest
