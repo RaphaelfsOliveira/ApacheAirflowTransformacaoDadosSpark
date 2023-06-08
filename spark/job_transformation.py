@@ -37,10 +37,13 @@ def datalake_write_delta(df, layer: str, folder: str):
     df.write.format("delta").mode("overwrite")\
         .option("overwriteSchema", "true")\
         .save(path)
+    
+    return True
 
 
 def twitter_read(spark, lake_src: str):
     df = spark.read.format("json").load(lake_src)
+    return df
 
 
 def twitter_extract(spark, lake_src: str, layer: str):
@@ -49,6 +52,8 @@ def twitter_extract(spark, lake_src: str, layer: str):
         df = twitter_read(spark, lake_src)
         df_tweet = get_tweets_data(df)
         df_user = get_users_data(df)
+
+        df.show()
 
         datalake_write_delta(df_tweet, layer, "tweet")
         datalake_write_delta(df_user, layer, "user")
