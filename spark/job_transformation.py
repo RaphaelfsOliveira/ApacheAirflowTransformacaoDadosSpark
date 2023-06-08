@@ -1,4 +1,7 @@
+from pyspark.sql import SparkSession
 from pyspark.sql import functions as f
+from delta import *
+import argparse
 
 
 def get_tweets_data(df):
@@ -55,3 +58,24 @@ def twitter_extract(spark, lake_src: str, layer: str):
     except Exception as err:
 
         return {'status': 500, 'msg': str(err)}
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description="Spark Twitter Load"
+    )
+
+    parser.add_argument("--lake_src", required=True)
+    parser.add_argument("--layer", required=True)
+
+    args = parser.parse_args()
+
+    builder = SparkSession.builder.appName("twitter_transform") \
+        .master("local[*]")\
+        .config("spark.driver.host", "127.0.0.1")\
+        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
+        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+
+    spark = configure_spark_with_delta_pip(builder).getOrCreate()
+
+    twitter_extract(spark, args.lake_src, args.layer)
