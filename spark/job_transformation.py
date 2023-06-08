@@ -82,3 +82,10 @@ if __name__ == '__main__':
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
     twitter_extract(spark, args.lake_src, args.layer_target)
+
+    # print(f"{args.layer_target}/tweet")
+    df = spark.read.format("delta").load(f"{args.layer_target}/tweet") 
+    df.show()
+    print("\n=======================")
+    print("TEST READING DELTA FILE")
+    print("=======================")
