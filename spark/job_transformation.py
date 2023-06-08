@@ -53,8 +53,6 @@ def twitter_extract(spark, lake_src: str, layer: str):
         df_tweet = get_tweets_data(df)
         df_user = get_users_data(df)
 
-        df.show()
-
         datalake_write_delta(df_tweet, layer, "tweet")
         datalake_write_delta(df_user, layer, "user")
 
