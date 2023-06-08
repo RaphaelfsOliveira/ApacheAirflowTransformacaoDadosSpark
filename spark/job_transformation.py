@@ -1,5 +1,6 @@
 from pyspark.sql import functions as f
 
+
 def get_tweets_data(df):
     df = df.select(
         f.explode("data").alias("tweets")
@@ -16,6 +17,7 @@ def get_tweets_data(df):
 
     return df
 
+
 def get_users_data(df):
     df = df.select(
         f.explode("includes.users").alias("user")
@@ -25,6 +27,7 @@ def get_users_data(df):
 
     return df
 
+
 def datalake_write_delta(df, layer: str, folder: str):
     path = f"../datalake/{layer}/{folder}"
     
@@ -33,3 +36,22 @@ def datalake_write_delta(df, layer: str, folder: str):
         .save(path)
 
 
+def twitter_read(spark, lake_src: str):
+    df = spark.read.format("json").load(lake_src)
+
+
+def twitter_extract(spark, lake_src: str, layer: str):
+
+    try:
+        df = twitter_read(spark, lake_src)
+        df_tweet = get_tweets_data(df)
+        df_user = get_users_data(df)
+
+        datalake_write_delta(df_tweet, layer, "tweet")
+        datalake_write_delta(df_user, layer, "user")
+
+        return {'status': 200, 'msg': 'OK'}
+    
+    except Exception as err:
+
+        return {'status': 500, 'msg': str(err)}
