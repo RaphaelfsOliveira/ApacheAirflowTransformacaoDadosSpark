@@ -164,4 +164,7 @@ cython_debug/
 *.pid
 *.txt
 *.json
-/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/airflow_pipeline/logs/scheduler/latest
+airflow_pipeline/logs/scheduler/latest
+
+# datalake
+datalake
