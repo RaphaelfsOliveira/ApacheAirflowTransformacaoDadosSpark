@@ -31,8 +31,8 @@ def get_users_data(df):
     return df
 
 
-def datalake_write_delta(df, layer: str, folder: str):
-    path = f"../datalake/{layer}/{folder}"
+def datalake_write_delta(df, lake_target: str, folder: str):
+    path = f"{lake_target}/{folder}"
     
     df.write.format("delta").mode("overwrite")\
         .option("overwriteSchema", "true")\
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     )
 
     parser.add_argument("--lake_src", required=True)
-    parser.add_argument("--layer", required=True)
+    parser.add_argument("--layer_target", required=True)
 
     args = parser.parse_args()
 
@@ -83,4 +83,4 @@ if __name__ == '__main__':
 
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
-    twitter_extract(spark, args.lake_src, args.layer)
+    twitter_extract(spark, args.lake_src, args.layer_target)
