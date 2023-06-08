@@ -69,7 +69,7 @@ if __name__ == '__main__':
     )
 
     parser.add_argument("--lake_src", required=True)
-    parser.add_argument("--layer_target", required=True)
+    parser.add_argument("--lake_target", required=True)
 
     args = parser.parse_args()
 
@@ -81,10 +81,10 @@ if __name__ == '__main__':
 
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
-    twitter_extract(spark, args.lake_src, args.layer_target)
+    twitter_extract(spark, args.lake_src, args.lake_target)
 
-    # print(f"{args.layer_target}/tweet")
-    df = spark.read.format("delta").load(f"{args.layer_target}/tweet") 
+    # print(f"{args.lake_target}/tweet")
+    df = spark.read.format("delta").load(f"{args.lake_target}/tweet") 
     df.show()
     print("\n=======================")
     print("TEST READING DELTA FILE")
