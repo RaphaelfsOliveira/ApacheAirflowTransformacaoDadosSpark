@@ -12,9 +12,9 @@ from pathlib import Path
 # TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"
 # current_date = datetime.now().date().strftime(TIMESTAMP_FORMAT)
 
-with DAG(dag_id = "TwitterDAG", start_date=days_ago(6), schedule_interval="@daily") as dag:
+with DAG(dag_id="TwitterDAG", start_date=days_ago(6), schedule_interval="@daily") as dag:
     
-    QUERY = "datascience"
+    QUERY="datascience"
 
     twitter_operator = TwitterOperator(
         task_id="twitter_datascience",
