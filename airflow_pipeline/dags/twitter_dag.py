@@ -28,7 +28,7 @@ with DAG(dag_id = "TwitterDAG", start_date=days_ago(6), schedule_interval="@dail
     )
 
     twitter_transform = SparkSubmitOperator(
-        task_id="twitter_extract",
+        task_id="spark_twitter_extract",
         name="twitter_extract",
         packages="io.delta:delta-core_2.12:2.4.0",
         conf={
