@@ -38,7 +38,7 @@ with DAG(dag_id = "TwitterDAG", start_date=days_ago(6), schedule_interval="@dail
         application="/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/spark/job_transformation.py",
         application_args=[
             "--lake_src", "/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/datalake/twitter_spark",
-            "--lake_target", "/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/datalake/landing_new",
+            "--lake_target", "/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/datalake/landing",
         ]
     )
 
