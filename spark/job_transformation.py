@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as f
-from delta import *
+from delta import * 
 import argparse
 
 
@@ -62,30 +62,23 @@ def twitter_extract(spark, lake_src: str, layer: str):
 
         return {'status': 500, 'msg': str(err)}
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="Spark Twitter Load"
     )
 
     parser.add_argument("--lake_src", required=True)
-    parser.add_argument("--layer_target", required=True)
+    parser.add_argument("--lake_target", required=True)
 
     args = parser.parse_args()
 
     builder = SparkSession.builder.appName("twitter_transform") \
         .master("local[*]")\
         .config("spark.driver.host", "127.0.0.1")\
+        .config("spark.jars.packages", "io.delta:delta-core_2.12:2.0.0")\
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
 
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
-    twitter_extract(spark, args.lake_src, args.layer_target)
-
-    # print(f"{args.layer_target}/tweet")
-    df = spark.read.format("delta").load(f"{args.layer_target}/tweet") 
-    df.show()
-    print("\n=======================")
-    print("TEST READING DELTA FILE")
-    print("=======================")
+    twitter_extract(spark, args.lake_src, args.lake_target)
