@@ -1,7 +1,8 @@
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as f
-from delta import * 
+# from delta import * TODO: deletar depois de testar mais
 import argparse
+from spark_builder import spark_build
 
 
 def get_tweets_data(df):
@@ -72,13 +73,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    builder = SparkSession.builder.appName("twitter_transform") \
-        .master("local[*]")\
-        .config("spark.driver.host", "127.0.0.1")\
-        .config("spark.jars.packages", "io.delta:delta-core_2.12:2.0.0")\
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
-        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-
-    spark = configure_spark_with_delta_pip(builder).getOrCreate()
+    spark = spark_build()
 
     twitter_extract(spark, args.lake_src, args.lake_target)
