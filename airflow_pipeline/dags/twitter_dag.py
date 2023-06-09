@@ -4,7 +4,7 @@ sys.path.append("airflow_pipeline")
 from airflow.models import DAG
 from datetime import datetime, timedelta
 from operators.twitter_operator import TwitterOperator
-from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
+from airflow.contrib.operators.spark_submit_operator import SparkSubmitOperator
 from os.path import join
 from airflow.utils.dates import days_ago
 from pathlib import Path
@@ -28,13 +28,19 @@ with DAG(dag_id = "TwitterDAG", start_date=days_ago(6), schedule_interval="@dail
     )
 
     twitter_transform = SparkSubmitOperator(
-        task_id="extract_twitter_delta_landing",
-        application="/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/spark/job_transformation.py",
+        task_id="twitter_extract",
         name="twitter_extract",
+        packages="io.delta:delta-core_2.12:2.4.0",
+        conf={
+            "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+            "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog"
+        },
+        application="/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/spark/job_transformation.py",
         application_args=[
             "--lake_src", "/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/datalake/twitter_spark",
             "--lake_target", "/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/datalake/landing_new",
         ]
     )
+
 
 twitter_operator >> twitter_transform
