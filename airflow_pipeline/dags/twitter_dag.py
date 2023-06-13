@@ -19,7 +19,7 @@ with DAG(dag_id="TwitterDAG", start_date=days_ago(6), schedule_interval="@daily"
     twitter_operator = TwitterOperator(
         task_id="twitter_datascience",
         file_path=join(
-            "datalake/twitter_spark/extract_date={{ data_interval_start.strftime('%Y-%m-%d') }}", 
+            "datalake/landing/extract_date={{ data_interval_start.strftime('%Y-%m-%d') }}", 
             "{{ data_interval_start.strftime('%Y-%m-%d') }}.json"
         ),
         start_time="{{ data_interval_start.strftime('%Y-%m-%dT%H:%M:%S.00Z') }}",
@@ -37,8 +37,8 @@ with DAG(dag_id="TwitterDAG", start_date=days_ago(6), schedule_interval="@daily"
         },
         application="/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/spark/job_transformation.py",
         application_args=[
-            "--lake_src", "/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/datalake/twitter_spark",
-            "--lake_target", "/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/datalake/landing",
+            "--lake_src", "/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/datalake/landing",
+            "--lake_target", "/Volumes/KINGSTON/Projects/ApacheAirflowTransformacaoDadosSpark/datalake/bronze",
         ]
     )
 
